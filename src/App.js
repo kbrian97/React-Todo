@@ -1,42 +1,57 @@
 import React from 'react';
 import TodoList from './components/TodoComponents/TodoList'
 import TodoForm from './components/TodoComponents/TodoForm';
+import Todo from './components/TodoComponents/Todo';
+import uuid from 'uuid'
 
 class App extends React.Component {
   // you will need a place to store your state in this component.
   // design `App` to be the parent component of your application.
   // this component is going to take care of state, and any change handlers you need to work with your state
-    constructor() {
-      super();
-
-      this.state = {
-        todos: [],
-        newTodo: ""
-        }
-    }
-
-    addTodo = (event) => {
-      event.preventDefault()
-      this.setState({
+      state = {
         todos: [
-          { task: this.state.newTodo, id: Date.now(), completed: false },
-          ...this.state.todos
-        ],
-        newTodo: ""
-      })
-    }
+            {
+              id: uuid.v4(),
+              title:'Finish Homework',
+              completed: false
+            },
+            {
+              id: uuid.v4(),
+              title:'Excercise',
+              completed: false
+            },
+            {
+              id: uuid.v4(),
+              title:'Buy Groceries',
+              completed: false
+            }
+        ]
+      }
 
-    changeHandler = (event) => {
-      this.setState({ [event.target.name]: event.target.value })
-    }
 
-  /*
-    isCompleted = () => {
-      this.setState({
-        
-      })
-    })
-  }*/
+      addTodo = (title) => {
+        const newTodo = {
+          id: uuid.v4(),
+          title,
+          completed: false
+        }
+        this.setState({ todos: [...this.state.todos, newTodo]
+        })
+      }
+
+      markComplete = (id) => {
+        this.setState({ todos: this.state.todos.map(todo => {
+          //if current todo is ea
+          if(todo.id === id) {
+            todo.completed = !todo.completed
+          }
+          return todo;
+        })})
+      }
+
+      clearTask = () => {
+        this.setState({ todos: [...this.state.todos.filter(todo => todo.completed !== true)] })
+      }
 
     render() {
     return (
@@ -44,13 +59,8 @@ class App extends React.Component {
         <h1>
           To Do List
         </h1>
-        <TodoForm 
-          addTodo={this.addTodo}
-          changeHandler={this.changeHandler}
-          newTodo={this.state.newTodo}
-          clear={this.clearCompleted}
-        />
-        <TodoList taskList={this.state.todos} isCompleted={this.isCompleted}/>
+        <Todo todos={this.state.todos} markComplete={this.markComplete} />
+        <TodoForm clear={this.clearTask} addTodo={this.addTodo}/>
       </div>
     );
   }

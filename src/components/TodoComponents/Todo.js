@@ -1,14 +1,14 @@
 import React from "react";
+import TodoList from './TodoList';
 
-
-const Todo = props => {
-    return (
-        <h3 
-            onClick={() => props.isCompleted(props)}
-            className={props.task.completed === true ? "completed" : ""}
-        >
-        {props.task.task}</h3>
-    )
+class Todo extends React.Component {
+    render(){
+        return( 
+            this.props.todos.map((todo) => (
+                <TodoList key={ todo.id } todo={ todo } markComplete={this.props.markComplete}/>
+            )
+            )
+        )
+    }
 }
-
 export default Todo
